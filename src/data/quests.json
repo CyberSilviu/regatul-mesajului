@@ -1,0 +1,74 @@
+{
+  "quest_email": {
+    "id": "quest_email",
+    "title": "Misiunea Regelui",
+    "subject": "Citirea si trimiterea unui mesaj electronic",
+    "npcKey": "rege",
+    "required": true,
+    "rewardItem": "scrisoare_regala"
+  },
+  "quest_address": {
+    "id": "quest_address",
+    "title": "Agenda Scribului",
+    "subject": "Folosirea agendei de adrese si cautarea adreselor de e-mail",
+    "npcKey": "scrib",
+    "required": false,
+    "rewardItem": "adresa_corecta"
+  },
+  "quest_folders": {
+    "id": "quest_folders",
+    "title": "Sortarea Mesajelor",
+    "subject": "Administrarea e-mail-urilor: directoare si filtre",
+    "npcKey": "bibliotecara",
+    "required": false,
+    "rewardItem": "mail_sortat"
+  },
+  "quest_attach": {
+    "id": "quest_attach",
+    "title": "Fisiere Atasate",
+    "subject": "Folosirea atasamentelor si redirectionarea mesajelor",
+    "npcKey": "trimis",
+    "required": false,
+    "rewardItem": "fisier_atasat"
+  },
+  "quest_crypto": {
+    "id": "quest_crypto",
+    "title": "Criptare si Semnatura",
+    "subject": "Criptarea transmisiei si semnatura digitala",
+    "npcKey": "calugar",
+    "required": false,
+    "rewardItem": "cifru_si_stampila"
+  },
+  "quest_firewall": {
+    "id": "quest_firewall",
+    "title": "Apararea Regatului",
+    "subject": "Apararea impotriva virusilor si Firewall",
+    "npcKey": "strajer",
+    "required": false,
+    "rewardItem": "pana_firewall"
+  },
+  "quest_etiquette": {
+    "id": "quest_etiquette",
+    "title": "Eticheta Digitala",
+    "subject": "Adresarea politicoasa si Legislatia pe Internet",
+    "npcKey": "sergent",
+    "required": false,
+    "rewardItem": "manual_eticheta"
+  },
+  "quest_chat": {
+    "id": "quest_chat",
+    "title": "Conversatie Online",
+    "subject": "IRC, smileys, acronime, NetMeeting, Telefonie IP",
+    "npcKey": "arcas",
+    "required": false,
+    "rewardItem": "lista_smileys"
+  },
+  "quest_search": {
+    "id": "quest_search",
+    "title": "Motoare de Cautare",
+    "subject": "Aplicatii practice: cautarea informatiilor pe internet",
+    "npcKey": "cioban",
+    "required": false,
+    "rewardItem": "referat_documentat"
+  }
+}

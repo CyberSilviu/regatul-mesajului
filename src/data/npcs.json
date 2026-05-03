@@ -1,0 +1,47 @@
+{
+  "rege": {
+    "greeting": "Bine ai venit, viteaz mesager! Regatul nostru are nevoie de tine. Trebuie sa trimitem o scrisoare importanta catre Regatul Rosu, dar mai intai trebuie sa demonstrezi ca intelegi cum functioneaza posta electronica.",
+    "questOffer": "Raspunde corect la 3 intrebari despre e-mail si programele de postare electronica. Daca reusesti, vei primi Scrisoarea Regala, primul pas al misiunii tale!",
+    "greetingComplete": "Bravo, mesager! Ai dovedit ca stii elementele de baza ale postei electronice. Misiunea ta continua - aduna toate obiectele si intoarce-te la mine cand esti gata sa trimiti mesajul!"
+  },
+  "scrib": {
+    "greeting": "Buna ziua, tanar mesager! Sunt scribul regatului, ma ocup cu agenda de adrese. Stii ce se intampla daca trimiti un mesaj la o adresa gresita? Se pierde pentru totdeauna!",
+    "questOffer": "Trebuie sa gasesti adresa corecta de e-mail a Regelui din Regatul Rosu din agenda mea. Cauta cu atentie - sunt mai multe adrese asemanatoare, dar numai una e corecta!",
+    "greetingComplete": "Excelent! Ai gasit adresa corecta a Regelui Rosu. Acum mesajul tau stie exact unde sa ajunga. Continuarea misiunii te asteapta!"
+  },
+  "bibliotecara": {
+    "greeting": "Salut, curioasule! Sunt bibliotecara regatului. Ma ocup cu organizarea mesajelor. Fara ordine in cutia postala, mesajele importante se pierd printre spam si notificari inutile!",
+    "questOffer": "Am primit 8 mesaje noi si trebuie sortate in directoarele corecte: Inbox, Spam, Cos si Important. Trage fiecare mesaj in directorul potrivit!",
+    "greetingComplete": "Perfect! Cutia postala este acum organizata exemplar. Mesajele importante nu se vor pierde. Mergi mai departe - mai ai misiuni de rezolvat!"
+  },
+  "trimis": {
+    "greeting": "Hei, mesager! Sunt trimisul curierat al regatului. Stiu totul despre atasarea fisierelor - e ca si cum ai pune documente intr-un plic. Nu orice document merge in orice mesaj!",
+    "questOffer": "Regele vrea sa trimita un mesaj oficial cu exact 3 documente atasate. Am mai multe fisiere disponibile, dar trebuie sa le alegi pe cele corecte. Fii atent la ce alegi!",
+    "greetingComplete": "Excelent! Ai atasat exact documentele necesare. Acum mesajul oficial este complet. Continua misiunea ta!"
+  },
+  "calugar": {
+    "greeting": "Pace, calatorule! Sunt calugarul criptograf al manastirii. Ma ocup cu securitatea mesajelor - niciun ochi strain nu trebuie sa citeasca scrisorile regale fara permisiune!",
+    "questOffer": "Trebuie sa decodezi un mesaj criptat cu Cifrul Cezar si apoi sa aplici semnatura digitala pe scrisoare. Arata ca esti demn de increderea regelui!",
+    "greetingComplete": "Admirabil! Ai inteles criptarea si semnatura digitala. Acum mesajul tau este sigur si autentificat. Misiunea continua!"
+  },
+  "strajer": {
+    "greeting": "Opreste-te! Sunt strajarul regatului! Ma ocup cu apararea impotriva virusilor si atacurilor informatice. Regatul nostru este asediat de virusi digitali care vor sa fure informatii!",
+    "questOffer": "Virusii ataca! Trebuie sa distrugi toti virusii inainte sa ajunga la castel. Apasa click pe fiecare virus pentru a-l elimina. Atentie la traficul legitim - nu distruge mesajele bune!",
+    "greetingComplete": "Regatul este salvat! Firewall-ul a tinut! Ai inteles cum functioneaza apararea impotriva amenintarilor informatice. Continua misiunea!"
+  },
+  "sergent": {
+    "greeting": "La ordinul tau, mesager! Sunt sergentul regatului. Ma ocup cu protocoalele de comunicare. In lumea digitala, felul in care te exprimi si respectarea legilor sunt la fel de importante ca in lumea reala!",
+    "questOffer": "Ai 5 situatii in care trebuie sa alegi formularea corecta si legala. Demonstreaza ca stii regulile de eticheta pe internet si legislatia in vigoare!",
+    "greetingComplete": "Bravo, soldat! Ai trecut testul de eticheta digitala. Neticheta si legislatia pe internet nu au secrete pentru tine. Misiunea continua!"
+  },
+  "arcas": {
+    "greeting": "Hei! Sunt arcasul regatului. In lumea moderna, sageata a evoluat in mesaj instant. IRC, smileys, acronime - toate sunt instrumente ale comunicarii rapide pe internet!",
+    "questOffer": "Trebuie sa identifici semnificatia emoticon-urilor si sa completezi o conversatie de chat cu acronimele corecte. Pare simplu, dar sunt capcane!",
+    "greetingComplete": "LOL! Ai trecut testul de chat. Acum stii limbajul conversatiei online. Lista cu smileys si acronime iti apartine. Continua!"
+  },
+  "cioban": {
+    "greeting": "Buna ziua, mesager! Sunt ciobanul regatului. Oitele mele sunt cercetasi - stiu cum sa gaseasca informatii valoroase pe internet pentru referate si proiecte. Dar trebuie sa fii atent la sursele credibile!",
+    "questOffer": "Foloseste motorul de cautare fictiv sa gasesti 3 fapte verificate despre istoria internetului. Alege sursele credibile si evita informatiile false!",
+    "greetingComplete": "Excellent! Referatul tau este documentat corect cu surse credibile. Acum stii cum sa cauti informatii pe internet responsabil. Misiunea aproape s-a incheiat!"
+  }
+}

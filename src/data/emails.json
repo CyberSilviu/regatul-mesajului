@@ -1,0 +1,66 @@
+[
+  {
+    "id": "email1",
+    "from": "spam@castiguri-rapide.ro",
+    "subject": "Ai castigat 1000 euro! Click ACUM!",
+    "preview": "Felicitari! Esti castigatorul premiului...",
+    "correctFolder": "spam",
+    "hint": "Oferte nereale de bani rapizi = spam"
+  },
+  {
+    "id": "email2",
+    "from": "prof.ionescu@scoala.edu.ro",
+    "subject": "Tema pentru maine - matematica",
+    "preview": "Dragi elevi, va rog sa rezolvati...",
+    "correctFolder": "inbox",
+    "hint": "Mesaj important de la profesor"
+  },
+  {
+    "id": "email3",
+    "from": "virus@malware-download.biz",
+    "subject": "Descarca premiul tau - URGENT",
+    "preview": "Click pe link pentru a descarca...",
+    "correctFolder": "spam",
+    "hint": "Domeniu suspect + link de descarcat = spam periculos"
+  },
+  {
+    "id": "email4",
+    "from": "admin@banca-transilvania.ro",
+    "subject": "Extrasul de cont - luna iulie",
+    "preview": "Va transmitem extrasul dvs. de cont...",
+    "correctFolder": "important",
+    "hint": "Document financiar oficial = important"
+  },
+  {
+    "id": "email5",
+    "from": "coleg@clasa9a.ro",
+    "subject": "Petrecere sambata seara - vii?",
+    "preview": "Buna! Facem o petrecere la mine...",
+    "correctFolder": "inbox",
+    "hint": "Mesaj personal de la un coleg"
+  },
+  {
+    "id": "email6",
+    "from": "noreply@facebook.com",
+    "subject": "Maria te-a mentionat intr-o postare",
+    "preview": "Ai o mentionare noua pe Facebook...",
+    "correctFolder": "trash",
+    "hint": "Notificare automata de retea sociala = cos"
+  },
+  {
+    "id": "email7",
+    "from": "document@primarie-iasi.ro",
+    "subject": "Certificat de nastere - copie scanata",
+    "preview": "Va transmitem documentul solicitat...",
+    "correctFolder": "important",
+    "hint": "Document oficial de la institutie = important"
+  },
+  {
+    "id": "email8",
+    "from": "newsletter@stiri-zi.ro",
+    "subject": "Stirile zilei - editie de dimineata",
+    "preview": "Iata cele mai importante stiri...",
+    "correctFolder": "inbox",
+    "hint": "Newsletter la care te-ai abonat"
+  }
+]
