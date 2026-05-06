@@ -44,7 +44,7 @@ const SEARCH_RESULTS = {
 };
 
 const REQUIRED_FACTS = 3;
-const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+import { IS_TOUCH } from '../config.js';
 
 export default class Quest_Search {
   constructor(scene) {

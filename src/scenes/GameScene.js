@@ -7,7 +7,7 @@ import MobileControls from '../ui/MobileControls.js';
 import QuestManager from '../quests/QuestManager.js';
 import {
   GAME_WIDTH, GAME_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT,
-  NPC_CONFIG, BUILDING_DATA, QUEST_REWARDS, INTERACTION_RADIUS
+  NPC_CONFIG, BUILDING_DATA, QUEST_REWARDS, INTERACTION_RADIUS, IS_TOUCH
 } from '../config.js';
 
 export default class GameScene extends Phaser.Scene {
@@ -195,9 +195,8 @@ export default class GameScene extends Phaser.Scene {
       if (b.staticBody) this.physics.add.collider(this.player, b.staticBody);
     });
 
-    // Touch controls — only on devices that support touch
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouch) {
+    // Touch controls — only on devices with coarse pointer (touchscreen)
+    if (IS_TOUCH) {
       this.mobileControls = new MobileControls(this);
       this.mobileControls.addFullscreenButton(this); // small ⛶ icon top-right
     } else {

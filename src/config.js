@@ -1,3 +1,7 @@
+// pointer:coarse = touchscreen (phone/tablet); pointer:fine = mouse (desktop/laptop)
+// More reliable than maxTouchPoints which is often >0 on Windows laptops without touch.
+export const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches;
+
 export const GAME_WIDTH = 1280;
 export const GAME_HEIGHT = 720;
 export const WORLD_WIDTH = 3200;

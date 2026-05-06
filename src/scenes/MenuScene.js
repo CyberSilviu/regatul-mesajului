@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
-import { SAVE_KEY } from '../config.js';
-
-const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+import { SAVE_KEY, IS_TOUCH } from '../config.js';
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -133,9 +131,14 @@ export default class MenuScene extends Phaser.Scene {
 
   _enterFullscreen() {
     if (!IS_TOUCH) return;
-    try {
-      if (!this.scale.isFullscreen) this.scale.startFullscreen();
-    } catch (_) { /* Fullscreen API not supported — game still works */ }
+    // Use the DOM Fullscreen API directly — more reliable on Brave/Android
+    // than Phaser's scale.startFullscreen() wrapper.
+    const el  = document.documentElement;
+    const req = el.requestFullscreen
+      || el.webkitRequestFullscreen
+      || el.mozRequestFullScreen
+      || el.msRequestFullscreen;
+    if (req) req.call(el).catch(() => { /* rejected by browser — game works anyway */ });
   }
 
   _makeBtn(x, y, label, cb, textColor, bgColor, stroke) {

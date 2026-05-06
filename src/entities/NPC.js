@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { IS_TOUCH } from '../config.js';
 
 const ANIM_MAP = {
   'warrior-blue-idle': 'warrior-idle',
@@ -24,8 +25,7 @@ export default class NPC extends Phaser.Physics.Arcade.Sprite {
     this.setDepth(9);
 
     // Interaction prompt — different hint for touch vs keyboard users
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    const promptText = isTouchDevice ? 'Apasa butonul galben' : 'Apasa E pentru a vorbi';
+    const promptText = IS_TOUCH ? 'Apasa butonul galben' : 'Apasa E pentru a vorbi';
     this.prompt = scene.add.text(cfg.x, cfg.y - 75, promptText, {
       fontFamily: 'Georgia, serif',
       fontSize: '13px',
