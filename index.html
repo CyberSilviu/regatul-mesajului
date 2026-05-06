@@ -2,24 +2,48 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Regatul Mesajului</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      height: 100%;
+      overflow: hidden;
+      background: #1a1a2e;
+    }
+
     body {
       background: #1a1a2e;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      /* Use dvh (dynamic viewport height) so browser chrome is excluded */
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
       overflow: hidden;
+      position: fixed;
+      inset: 0;
+      /* Prevent scroll bounce and text selection on mobile */
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
     }
-    canvas { display: block; touch-action: none; }
 
-    /* Portrait-mode warning — only visible on narrow touch screens */
+    canvas {
+      display: block;
+      touch-action: none;
+      /* Prevent canvas from causing scroll on iOS */
+      -webkit-touch-callout: none;
+    }
+
+    /* Portrait-mode warning — only on narrow touch screens */
     #rotate-msg {
       display: none;
       position: fixed;

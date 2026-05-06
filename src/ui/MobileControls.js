@@ -1,6 +1,6 @@
 /**
  * MobileControls — virtual joystick (bottom-left) + interact button (bottom-right).
- * Only instantiated when a touch device is detected.
+ * Only instantiated when a touch device is detected in GameScene.
  *
  * Usage in GameScene:
  *   this.mobileControls = new MobileControls(this);
@@ -9,9 +9,10 @@
  *   if (this.mobileControls.consumeInteract()) { ... }
  */
 
-const JOY_BASE_R  = 62;
-const JOY_THUMB_R = 27;
-const BTN_R       = 50;
+// Control sizes — larger than typical so they're easy to tap on small screens
+const JOY_BASE_R  = 80;   // outer ring radius
+const JOY_THUMB_R = 34;   // moveable thumb radius
+const BTN_R       = 62;   // interact button radius
 
 export default class MobileControls {
   constructor(scene) {
@@ -24,10 +25,9 @@ export default class MobileControls {
     const W = scene.scale.width;   // 1280
     const H = scene.scale.height;  // 720
 
-    // Joystick sits above the HUD bar, left side
-    this.joyCenter = { x: 110, y: H - 115 };
-    // Interact button: right side, same height
-    this.btnPos    = { x: W - 110, y: H - 115 };
+    // Sit above the HUD bar (which lives at ~y=682), in the left/right corners
+    this.joyCenter = { x: 120, y: H - 110 };
+    this.btnPos    = { x: W - 120, y: H - 110 };
 
     this._createJoystick(H);
     this._createInteractButton(W, H);
@@ -45,39 +45,45 @@ export default class MobileControls {
     this._drawBase(x, y);
     this._drawThumb(x, y);
 
-    // Touch zone covers the bottom-left corner so the player can reach it easily
-    this.joyZone = this.scene.add.rectangle(0, H, 260, 260, 0, 0)
+    // Touch zone: generous bottom-left area so the thumb doesn't need to start precisely
+    this.joyZone = this.scene.add.rectangle(0, H, 300, 300, 0, 0)
       .setOrigin(0, 1)
       .setScrollFactor(0)
       .setDepth(202)
       .setInteractive();
 
     this.joyZone.on('pointerdown', ptr => {
-      if (this.joyPointerId !== -1) return; // already tracking another finger
+      if (this.joyPointerId !== -1) return; // another finger is already on the joystick
       this.joyPointerId = ptr.id;
     });
   }
 
   _drawBase(cx, cy) {
     this.baseGfx.clear();
-    this.baseGfx.fillStyle(0x000000, 0.25);
+
+    // Outer ring
+    this.baseGfx.fillStyle(0x000000, 0.35);
     this.baseGfx.fillCircle(cx, cy, JOY_BASE_R);
-    this.baseGfx.lineStyle(2, 0xffffff, 0.45);
+    this.baseGfx.lineStyle(3, 0xffffff, 0.6);
     this.baseGfx.strokeCircle(cx, cy, JOY_BASE_R);
 
-    // Subtle directional tick marks
-    this.baseGfx.fillStyle(0xffffff, 0.3);
-    const r = JOY_BASE_R - 12;
+    // Inner guide ring
+    this.baseGfx.lineStyle(1, 0xffffff, 0.2);
+    this.baseGfx.strokeCircle(cx, cy, JOY_BASE_R * 0.5);
+
+    // Cardinal tick marks (show direction affordance)
+    this.baseGfx.fillStyle(0xffffff, 0.45);
+    const r = JOY_BASE_R - 14;
     [[0, -1], [1, 0], [0, 1], [-1, 0]].forEach(([dx, dy]) => {
-      this.baseGfx.fillRect(cx + dx * r - 3, cy + dy * r - 3, 6, 6);
+      this.baseGfx.fillRect(cx + dx * r - 4, cy + dy * r - 4, 8, 8);
     });
   }
 
   _drawThumb(tx, ty) {
     this.thumbGfx.clear();
-    this.thumbGfx.fillStyle(0xffffff, 0.6);
+    this.thumbGfx.fillStyle(0xffffff, 0.7);
     this.thumbGfx.fillCircle(tx, ty, JOY_THUMB_R);
-    this.thumbGfx.lineStyle(1.5, 0xcccccc, 0.8);
+    this.thumbGfx.lineStyle(2, 0xdddddd, 0.9);
     this.thumbGfx.strokeCircle(tx, ty, JOY_THUMB_R);
   }
 
@@ -87,7 +93,7 @@ export default class MobileControls {
     const dy   = py - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (dist < 8) {
+    if (dist < 10) {
       this.joyVec = { x: 0, y: 0 };
       this._drawThumb(cx, cy);
       return;
@@ -110,15 +116,18 @@ export default class MobileControls {
     this.btnGfx = this.scene.add.graphics().setScrollFactor(0).setDepth(200);
     this._drawBtn(false);
 
-    this.btnLabel = this.scene.add.text(x, y - 8, 'E', {
-      fontFamily: 'Georgia', fontSize: '28px', color: '#1a1a2e', fontStyle: 'bold'
+    // "E" label
+    this.btnLabel = this.scene.add.text(x, y - 10, 'E', {
+      fontFamily: 'Georgia', fontSize: '32px', color: '#1a1a2e', fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(202);
 
-    this.btnSub = this.scene.add.text(x, y + 18, 'vorbeste', {
-      fontFamily: 'Georgia', fontSize: '11px', color: '#1a1a2e'
+    // Sub-label
+    this.btnSub = this.scene.add.text(x, y + 22, 'vorbeste', {
+      fontFamily: 'Georgia', fontSize: '13px', color: '#1a1a2e', fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(202);
 
-    this.btnZone = this.scene.add.circle(x, y, BTN_R, 0, 0)
+    // Invisible hit zone (slightly larger than visual for easier tapping)
+    this.btnZone = this.scene.add.circle(x, y, BTN_R + 10, 0, 0)
       .setScrollFactor(0).setDepth(203).setInteractive();
 
     this.btnZone.on('pointerdown', () => {
@@ -132,10 +141,30 @@ export default class MobileControls {
   _drawBtn(pressed) {
     const { x, y } = this.btnPos;
     this.btnGfx.clear();
-    this.btnGfx.fillStyle(pressed ? 0xffa500 : 0xffd700, pressed ? 0.9 : 0.65);
+    this.btnGfx.fillStyle(pressed ? 0xff9900 : 0xffd700, pressed ? 0.95 : 0.75);
     this.btnGfx.fillCircle(x, y, BTN_R);
-    this.btnGfx.lineStyle(2.5, pressed ? 0xff8800 : 0xffcc00, 0.9);
+    this.btnGfx.lineStyle(3, pressed ? 0xff6600 : 0xffcc00, 1);
     this.btnGfx.strokeCircle(x, y, BTN_R);
+  }
+
+  // ─── Fullscreen toggle button (top-right corner) ─────────────────────────────
+
+  addFullscreenButton(scene) {
+    const W = scene.scale.width;
+    const fsBtn = scene.add.text(W - 8, 8, '⛶', {
+      fontSize: '28px', color: '#ffffff'
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(300).setAlpha(0.55)
+      .setInteractive({ cursor: 'pointer' });
+
+    fsBtn.on('pointerdown', () => {
+      try {
+        if (scene.scale.isFullscreen) {
+          scene.scale.stopFullscreen();
+        } else {
+          scene.scale.startFullscreen();
+        }
+      } catch (_) {}
+    });
   }
 
   // ─── Global pointer tracking (handles finger moving outside the zone) ────────
@@ -161,12 +190,12 @@ export default class MobileControls {
 
   // ─── Public API ──────────────────────────────────────────────────────────────
 
-  /** Returns {x, y} normalized direction vector, both 0 when idle. */
+  /** Returns {x, y} normalised direction vector, both 0 when idle. */
   getJoystick() {
     return this.joyVec;
   }
 
-  /** Returns true (and resets flag) when the interact button was tapped. */
+  /** Returns true (and resets) when the interact button was tapped. */
   consumeInteract() {
     if (this._interactFired) {
       this._interactFired = false;
@@ -175,7 +204,7 @@ export default class MobileControls {
     return false;
   }
 
-  /** Call after quest/dialog ends so a tap during the overlay doesn't carry over. */
+  /** Discard any tap that happened during a quest/dialog overlay. */
   reset() {
     this._interactFired = false;
   }

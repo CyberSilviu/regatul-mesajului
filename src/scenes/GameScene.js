@@ -197,7 +197,12 @@ export default class GameScene extends Phaser.Scene {
 
     // Touch controls — only on devices that support touch
     const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    this.mobileControls = isTouch ? new MobileControls(this) : null;
+    if (isTouch) {
+      this.mobileControls = new MobileControls(this);
+      this.mobileControls.addFullscreenButton(this); // small ⛶ icon top-right
+    } else {
+      this.mobileControls = null;
+    }
   }
 
   _setupCamera() {
@@ -275,7 +280,7 @@ export default class GameScene extends Phaser.Scene {
 
   _startDialog(npcKey) {
     this.inputEnabled = false;
-    const questId = NPC_CONFIG[npcKey].questId;
+    const { questId } = NPC_CONFIG[npcKey];
     const state   = this.questManager.isCompleted(questId) ? 'completed' : 'available';
     this.scene.launch('DialogScene', { npcKey, state });
     this.scene.bringToTop('DialogScene');
