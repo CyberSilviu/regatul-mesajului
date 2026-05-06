@@ -44,21 +44,27 @@ const SEARCH_RESULTS = {
 };
 
 const REQUIRED_FACTS = 3;
+const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
 export default class Quest_Search {
   constructor(scene) {
     this.scene = scene;
-    this.searchText = '';
-    this.collected = new Set();
+    this.searchText = 'istoria internetului';
+    this.collected  = new Set();
     this.resultRows = [];
     this.keyHandler = null;
+    this.htmlInput  = null;
   }
 
   start() {
     this._drawFrame();
     this._drawBrowser();
     this._showResults('default');
-    this._setupKeyboard();
+    if (IS_TOUCH) {
+      this._setupMobileInput();
+    } else {
+      this._setupKeyboard();
+    }
   }
 
   _drawFrame() {
@@ -80,8 +86,11 @@ export default class Quest_Search {
     this.scene.add.rectangle(cx, 183, 1020, 36, 0xdddddd).setStrokeStyle(2, 0xaaaaaa);
 
     // Search box
-    this.scene.add.rectangle(cx - 60, 183, 820, 30, 0xffffff).setStrokeStyle(2, 0x4466aa);
-    this.searchDsp = this.scene.add.text(230, 183, 'istoria internetului|', {
+    this.searchBox = this.scene.add.rectangle(cx - 60, 183, 820, 30, 0xffffff)
+      .setStrokeStyle(2, 0x4466aa)
+      .setInteractive({ cursor: IS_TOUCH ? 'pointer' : 'text' });
+
+    this.searchDsp = this.scene.add.text(230, 183, this.searchText + '|', {
       fontFamily: 'monospace', fontSize: '14px', color: '#333333'
     }).setOrigin(0, 0.5);
 
@@ -92,10 +101,17 @@ export default class Quest_Search {
     }).setOrigin(0.5);
     searchBtn.on('pointerdown', () => this._doSearch());
 
+    // On touch: tapping the search box focuses the HTML input
+    if (IS_TOUCH) {
+      this.searchBox.on('pointerdown', () => this.htmlInput?.focus());
+    }
+
     this.collectLbl = this.scene.add.text(cx, 213, `Fapte colectate: 0 / ${REQUIRED_FACTS}`, {
       fontFamily: 'Georgia, serif', fontSize: '14px', color: '#334455', fontStyle: 'bold'
     }).setOrigin(0.5);
   }
+
+  // ── Desktop: Phaser keyboard capture ────────────────────────────────────────
 
   _setupKeyboard() {
     this.keyHandler = (ev) => {
@@ -105,8 +121,66 @@ export default class Quest_Search {
       this.searchDsp.setText((this.searchText || '') + '|');
     };
     this.scene.input.keyboard.on('keydown', this.keyHandler);
-    this.searchText = 'istoria internetului';
   }
+
+  // ── Mobile: HTML <input> at top of viewport ──────────────────────────────────
+
+  _setupMobileInput() {
+    const inp = document.createElement('input');
+    inp.type  = 'text';
+    inp.value = this.searchText;
+    inp.setAttribute('autocomplete', 'off');
+    inp.setAttribute('autocorrect',  'off');
+    inp.setAttribute('spellcheck',   'false');
+    Object.assign(inp.style, {
+      position:    'fixed',
+      top:         '6px',
+      left:        '50%',
+      transform:   'translateX(-50%)',
+      zIndex:      '9999',
+      fontSize:    '16px',  // ≥16px prevents iOS auto-zoom
+      padding:     '6px 16px',
+      borderRadius:'20px',
+      border:      '2px solid #4466aa',
+      background:  'rgba(240,245,255,0.97)',
+      color:       '#1a1a2e',
+      width:       '300px',
+      fontFamily:  'monospace',
+      outline:     'none',
+      boxShadow:   '0 2px 8px rgba(0,0,0,0.4)'
+    });
+    document.body.appendChild(inp);
+    this.htmlInput = inp;
+
+    inp.addEventListener('input', () => {
+      this.searchText = inp.value;
+      this.searchDsp.setText((this.searchText || '') + '|');
+    });
+
+    // Enter key on the mobile keyboard triggers search
+    inp.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter') {
+        inp.blur();
+        this._doSearch();
+      }
+    });
+
+    // Cleanup on scene shutdown
+    this.scene.events.once('shutdown', () => this._removeMobileInput());
+
+    // Show hint that search box is tappable
+    this.searchDsp.setText('Apasa campul de sus pentru a cauta');
+    inp.focus();
+  }
+
+  _removeMobileInput() {
+    if (this.htmlInput) {
+      this.htmlInput.remove();
+      this.htmlInput = null;
+    }
+  }
+
+  // ── Shared ───────────────────────────────────────────────────────────────────
 
   _doSearch() {
     const q = this.searchText.toLowerCase();
@@ -120,7 +194,9 @@ export default class Quest_Search {
     this.resultRows.forEach(r => r.forEach(o => o.destroy()));
     this.resultRows = [];
 
-    const results = typeof key === 'string' ? SEARCH_RESULTS[key] || SEARCH_RESULTS.default : key;
+    const results = typeof key === 'string'
+      ? (SEARCH_RESULTS[key] || SEARCH_RESULTS.default)
+      : key;
 
     results.forEach((r, i) => {
       const y = 253 + i * 66;
@@ -164,7 +240,8 @@ export default class Quest_Search {
       this.collectLbl.setText(`Fapte colectate: ${this.collected.size} / ${REQUIRED_FACTS}`);
 
       if (this.collected.size >= REQUIRED_FACTS) {
-        this.scene.input.keyboard.off('keydown', this.keyHandler);
+        if (this.keyHandler) this.scene.input.keyboard.off('keydown', this.keyHandler);
+        this._removeMobileInput();
         this.scene.time.delayedCall(600, () => this._complete());
       }
     } else if (!result.correct) {

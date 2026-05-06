@@ -15,19 +15,26 @@ const CONTACTS = [
   { name: 'Comerciantul',       address: 'comert@piataregala.ro',            correct: false }
 ];
 
+const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
 export default class Quest_Address {
   constructor(scene) {
     this.scene = scene;
     this.searchText = '';
     this.rows = [];
     this.keyHandler = null;
+    this.htmlInput  = null;
   }
 
   start() {
     this._drawFrame();
     this._drawSearchBox();
     this._renderList(CONTACTS);
-    this._setupKeyboard();
+    if (IS_TOUCH) {
+      this._setupMobileInput();
+    } else {
+      this._setupKeyboard();
+    }
   }
 
   _drawFrame() {
@@ -57,6 +64,8 @@ export default class Quest_Address {
     }).setOrigin(0, 0.5);
   }
 
+  // ── Desktop: Phaser keyboard capture ────────────────────────────────────────
+
   _setupKeyboard() {
     this.keyHandler = (ev) => {
       if (ev.key === 'Backspace') {
@@ -65,13 +74,76 @@ export default class Quest_Address {
         this.searchText += ev.key;
       }
       this.searchDisplay.setText(this.searchText + '|');
-      const filtered = CONTACTS.filter(c =>
-        c.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        c.address.toLowerCase().includes(this.searchText.toLowerCase())
-      );
-      this._renderList(filtered);
+      this._filterAndRender(this.searchText);
     };
     this.scene.input.keyboard.on('keydown', this.keyHandler);
+  }
+
+  // ── Mobile: HTML <input> at the top of the viewport ─────────────────────────
+  // Positioned top-center so the native keyboard slides in from the bottom
+  // without shrinking the game canvas (avoids viewport-resize issues).
+
+  _setupMobileInput() {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = 'Cauta contact...';
+    inp.setAttribute('autocomplete', 'off');
+    inp.setAttribute('autocorrect', 'off');
+    inp.setAttribute('spellcheck', 'false');
+    Object.assign(inp.style, {
+      position:    'fixed',
+      top:         '6px',
+      left:        '50%',
+      transform:   'translateX(-50%)',
+      zIndex:      '9999',
+      fontSize:    '16px',  // ≥16px prevents iOS auto-zoom
+      padding:     '6px 16px',
+      borderRadius:'20px',
+      border:      '2px solid #8b6914',
+      background:  'rgba(245,230,200,0.97)',
+      color:       '#221100',
+      width:       '270px',
+      fontFamily:  'monospace',
+      outline:     'none',
+      boxShadow:   '0 2px 8px rgba(0,0,0,0.4)'
+    });
+    document.body.appendChild(inp);
+    this.htmlInput = inp;
+
+    inp.addEventListener('input', () => {
+      this.searchText = inp.value;
+      this.searchDisplay.setText(this.searchText + '|');
+      this._filterAndRender(this.searchText);
+    });
+
+    // Tapping the in-game search box re-focuses the input
+    this.searchBg.setInteractive({ cursor: 'pointer' });
+    this.searchBg.on('pointerdown', () => inp.focus());
+
+    // Hint text instead of cursor
+    this.searchDisplay.setText('Apasa campul de sus pentru a cauta');
+
+    // Cleanup when scene shuts down (quest complete or scene restart)
+    this.scene.events.once('shutdown', () => this._removeMobileInput());
+
+    inp.focus();
+  }
+
+  _removeMobileInput() {
+    if (this.htmlInput) {
+      this.htmlInput.remove();
+      this.htmlInput = null;
+    }
+  }
+
+  // ── Shared ───────────────────────────────────────────────────────────────────
+
+  _filterAndRender(text) {
+    const filtered = CONTACTS.filter(c =>
+      c.name.toLowerCase().includes(text.toLowerCase()) ||
+      c.address.toLowerCase().includes(text.toLowerCase())
+    );
+    this._renderList(filtered);
   }
 
   _renderList(contacts) {
@@ -110,7 +182,10 @@ export default class Quest_Address {
   }
 
   _select(contact) {
-    this.scene.input.keyboard.off('keydown', this.keyHandler);
+    if (this.keyHandler) {
+      this.scene.input.keyboard.off('keydown', this.keyHandler);
+    }
+    this._removeMobileInput();
     this.rows.forEach(r => r.forEach(o => o.destroy()));
 
     if (contact.correct) {
@@ -129,7 +204,11 @@ export default class Quest_Address {
       this.scene.time.delayedCall(1500, () => {
         msg.destroy();
         this._renderList(CONTACTS);
-        this._setupKeyboard();
+        if (IS_TOUCH) {
+          this._setupMobileInput();
+        } else {
+          this._setupKeyboard();
+        }
       });
     }
   }

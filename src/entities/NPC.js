@@ -23,8 +23,10 @@ export default class NPC extends Phaser.Physics.Arcade.Sprite {
     this.setScale(SCALE_MAP[cfg.sprite] || DEFAULT_SCALE);
     this.setDepth(9);
 
-    // Interaction prompt
-    this.prompt = scene.add.text(cfg.x, cfg.y - 75, 'Apasa E pentru a vorbi', {
+    // Interaction prompt — different hint for touch vs keyboard users
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const promptText = isTouchDevice ? 'Apasa butonul galben' : 'Apasa E pentru a vorbi';
+    this.prompt = scene.add.text(cfg.x, cfg.y - 75, promptText, {
       fontFamily: 'Georgia, serif',
       fontSize: '13px',
       color: '#ffffff',

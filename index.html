@@ -2,7 +2,10 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Regatul Mesajului</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,10 +17,35 @@
       min-height: 100vh;
       overflow: hidden;
     }
-    canvas { display: block; }
+    canvas { display: block; touch-action: none; }
+
+    /* Portrait-mode warning — only visible on narrow touch screens */
+    #rotate-msg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #1a1a2e;
+      color: #ffdd88;
+      font-family: Georgia, serif;
+      font-size: 22px;
+      text-align: center;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      z-index: 10000;
+    }
+    #rotate-msg span { font-size: 56px; }
+    @media (orientation: portrait) and (pointer: coarse) {
+      #rotate-msg { display: flex; }
+    }
   </style>
 </head>
 <body>
+  <div id="rotate-msg">
+    <span>📱</span>
+    Roteste telefonul in<br>modul <strong>landscape</strong> pentru a juca!
+  </div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

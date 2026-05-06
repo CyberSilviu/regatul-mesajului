@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(timeout 4)"
+      "Bash(timeout 4)",
+      "Bash(grep -E \"\\(^\\\\.\\\\/[^/]+$|src/|package\\\\.json|vite\\\\.config|index\\\\.html\\)\")",
+      "Bash(npx vite *)"
     ]
   }
 }

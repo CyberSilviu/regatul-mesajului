@@ -3,6 +3,7 @@ import Player from '../entities/Player.js';
 import NPC from '../entities/NPC.js';
 import Building from '../entities/Building.js';
 import HUD from '../ui/HUD.js';
+import MobileControls from '../ui/MobileControls.js';
 import QuestManager from '../quests/QuestManager.js';
 import {
   GAME_WIDTH, GAME_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT,
@@ -193,6 +194,10 @@ export default class GameScene extends Phaser.Scene {
     this.buildings.forEach(b => {
       if (b.staticBody) this.physics.add.collider(this.player, b.staticBody);
     });
+
+    // Touch controls — only on devices that support touch
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    this.mobileControls = isTouch ? new MobileControls(this) : null;
   }
 
   _setupCamera() {
@@ -225,11 +230,13 @@ export default class GameScene extends Phaser.Scene {
       this.questManager.complete(data.questId);
       const reward = QUEST_REWARDS[data.questId];
       if (reward) this.hud.showItemObtained(reward.name);
+      this.mobileControls?.reset(); // discard any tap that happened during the quest
       this.inputEnabled = true;
     });
 
     // From DialogScene: dialog closed without quest
     this.events.on('dialog-close', () => {
+      this.mobileControls?.reset();
       this.inputEnabled = true;
     });
   }
@@ -237,7 +244,8 @@ export default class GameScene extends Phaser.Scene {
   update() {
     if (!this.inputEnabled) return;
 
-    this.player.update(this.cursors, this.wasd);
+    const joy = this.mobileControls?.getJoystick() ?? null;
+    this.player.update(this.cursors, this.wasd, joy);
 
     let nearestNPC  = null;
     let nearestDist = INTERACTION_RADIUS;
@@ -257,7 +265,9 @@ export default class GameScene extends Phaser.Scene {
       nearestNPC.updatePromptPosition(this.cameras.main);
       nearestNPC.showPrompt(true);
 
-      if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+      const ePressed      = Phaser.Input.Keyboard.JustDown(this.eKey);
+      const btnPressed    = this.mobileControls?.consumeInteract() ?? false;
+      if (ePressed || btnPressed) {
         this._startDialog(nearestNPC.npcKey);
       }
     }
