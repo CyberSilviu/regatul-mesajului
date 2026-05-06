@@ -9,10 +9,10 @@
  *   if (this.mobileControls.consumeInteract()) { ... }
  */
 
-// Control sizes — larger than typical so they're easy to tap on small screens
-const JOY_BASE_R  = 80;   // outer ring radius
-const JOY_THUMB_R = 34;   // moveable thumb radius
-const BTN_R       = 62;   // interact button radius
+// Control sizes — generous so they're easy to tap even on scaled-down screens
+const JOY_BASE_R  = 105;  // outer ring radius
+const JOY_THUMB_R = 46;   // moveable thumb radius
+const BTN_R       = 88;   // interact button radius
 
 export default class MobileControls {
   constructor(scene) {
@@ -25,9 +25,9 @@ export default class MobileControls {
     const W = scene.scale.width;   // 1280
     const H = scene.scale.height;  // 720
 
-    // Sit above the HUD bar (which lives at ~y=682), in the left/right corners
-    this.joyCenter = { x: 120, y: H - 110 };
-    this.btnPos    = { x: W - 120, y: H - 110 };
+    // Position controls so the ring fits comfortably above the HUD bar
+    this.joyCenter = { x: 130, y: H - 125 };
+    this.btnPos    = { x: W - 130, y: H - 125 };
 
     this._createJoystick(H);
     this._createInteractButton(W, H);
@@ -45,8 +45,8 @@ export default class MobileControls {
     this._drawBase(x, y);
     this._drawThumb(x, y);
 
-    // Touch zone: generous bottom-left area so the thumb doesn't need to start precisely
-    this.joyZone = this.scene.add.rectangle(0, H, 300, 300, 0, 0)
+    // Touch zone: generous bottom-left area (covers the full joystick + margin)
+    this.joyZone = this.scene.add.rectangle(0, H, 360, 360, 0, 0)
       .setOrigin(0, 1)
       .setScrollFactor(0)
       .setDepth(202)
@@ -117,17 +117,17 @@ export default class MobileControls {
     this._drawBtn(false);
 
     // "E" label
-    this.btnLabel = this.scene.add.text(x, y - 10, 'E', {
-      fontFamily: 'Georgia', fontSize: '32px', color: '#1a1a2e', fontStyle: 'bold'
+    this.btnLabel = this.scene.add.text(x, y - 16, 'E', {
+      fontFamily: 'Georgia', fontSize: '44px', color: '#1a1a2e', fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(202);
 
     // Sub-label
-    this.btnSub = this.scene.add.text(x, y + 22, 'vorbeste', {
-      fontFamily: 'Georgia', fontSize: '13px', color: '#1a1a2e', fontStyle: 'bold'
+    this.btnSub = this.scene.add.text(x, y + 34, 'vorbeste', {
+      fontFamily: 'Georgia', fontSize: '16px', color: '#1a1a2e', fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(202);
 
     // Invisible hit zone (slightly larger than visual for easier tapping)
-    this.btnZone = this.scene.add.circle(x, y, BTN_R + 10, 0, 0)
+    this.btnZone = this.scene.add.circle(x, y, BTN_R + 12, 0, 0)
       .setScrollFactor(0).setDepth(203).setInteractive();
 
     this.btnZone.on('pointerdown', () => {
